@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vasoolimilaan — day-close</title>
+<meta name="description" content="Vasoolimilaan separates today's cash sales from cash collected on old dues and goods given on new credit, so your day-close isn't distorted by recovery or fresh udhaar.">
+<style>
+  :root{--bg:#eff6f4;--card:#fff;--ink:#0f221d;--muted:#4e6962;--brand:#3e7e6e;--brand-ink:#245047;--line:#d6e6e2;--accent:#e3f0ec}
+  @media (prefers-color-scheme:dark){:root{--bg:#0c1512;--card:#141d1a;--ink:#e3efeb;--muted:#8faba3;--brand:#59a692;--brand-ink:#bce3d7;--line:#213029;--accent:#132019}}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  header{padding:64px 0 24px;text-align:center}
+  .eyebrow{color:var(--brand);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:13px}
+  h1{font-size:44px;margin:.2em 0 .1em;letter-spacing:-.02em}
+  .tag{color:var(--muted);font-size:19px;max-width:640px;margin:8px auto 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:28px 0}
+  @media (max-width:760px){.grid{grid-template-columns:1fr}h1{font-size:34px}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+  .card h2{margin:0 0 8px;font-size:20px}
+  label{display:block;font-size:13px;color:var(--muted);margin:8px 0 4px}
+  input{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:15px}
+  .out{margin-top:16px;background:var(--accent);border-radius:12px;padding:16px}
+  .big{font-size:28px;font-weight:800;color:var(--brand-ink)}
+  .rowline{display:flex;justify-content:space-between;padding:4px 0;font-size:14px;border-top:1px dashed var(--line);margin-top:6px}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:40px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Vasoolimilaan · वसूली मिलान</div>
+    <h1>Did you actually make money?</h1>
+    <p class="tag">A till fattened by dues recovery looks like a great sales day; thinned by fresh
+      credit looks like a loss. Vasoolimilaan pulls the three apart at day-close.</p>
+  </header>
+  <div class="grid">
+    <div class="card">
+      <h2>Try it</h2>
+      <label>Cash sales today ₹</label><input id="cash" type="number" value="3000">
+      <label>Dues collected (old) ₹</label><input id="dues" type="number" value="2000">
+      <label>New credit given ₹</label><input id="credit" type="number" value="500">
+      <div class="out">
+        <div>True sales today</div><div class="big" id="ts">₹0.00</div>
+        <div class="rowline"><span>Cash into till</span><b id="ci">–</b></div>
+        <div class="rowline"><span>Net credit change</span><b id="nc">–</b></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Three flows, not one number</h2>
+      <p style="color:var(--muted)">No khata app ties the credit ledger into the day's cash
+        reconciliation, so recovery and fresh credit hide inside the till total.</p>
+      <p style="color:var(--muted)">True sales = cash sales + new credit. Cash in = cash sales + dues
+        collected. Net credit change = new credit − dues collected.</p>
+      <p style="color:var(--muted);font-size:14px">Flutter → Go → PostgreSQL journal service.</p>
+    </div>
+  </div>
+  <footer>Vasoolimilaan · a local-first shopkeeper tool · offline, no account.</footer>
+</div>
+<script>
+  const $=id=>document.getElementById(id), inr=(v,s)=> (s&&v>=0?'+':'')+'₹'+(isFinite(v)?v:0).toFixed(2);
+  function calc(){
+    const c=+$('cash').value||0, d=+$('dues').value||0, n=+$('credit').value||0;
+    $('ts').textContent=inr(c+n); $('ci').textContent=inr(c+d);
+    $('nc').textContent=inr(n-d,true);
+  }
+  document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc)); calc();
+</script>
+</body>
+</html>
